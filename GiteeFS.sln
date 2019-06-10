@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GiteeFS", "GiteeFS\GiteeFS.fsproj", "{28729914-48FB-4478-91D8-198F5438A011}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GiteeFSTest", "GiteeFSTest\GiteeFSTest.fsproj", "{F8E00243-647B-4833-820B-B82F6235CED5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0D51D970-831B-4380-98B5-6E4985E1CE73}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28729914-48FB-4478-91D8-198F5438A011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28729914-48FB-4478-91D8-198F5438A011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28729914-48FB-4478-91D8-198F5438A011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28729914-48FB-4478-91D8-198F5438A011}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8E00243-647B-4833-820B-B82F6235CED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8E00243-647B-4833-820B-B82F6235CED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8E00243-647B-4833-820B-B82F6235CED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8E00243-647B-4833-820B-B82F6235CED5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96256F11-BF9A-4037-9015-A9047C080599}
+	EndGlobalSection
+EndGlobal
