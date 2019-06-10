@@ -1,12 +1,13 @@
 # GiteeFS
+[![Build status](https://ci.appveyor.com/api/projects/status/u1jfsibjfcubew6f?svg=true)](https://ci.appveyor.com/project/SmallLuma/giteefs)
 
-Õâ¸ö¿âÓÃÓÚ½«Gitee×ª»»ÎªÃâ·ÑµÄÍøÂçÓ²ÅÌ¡£
+è¿™ä¸ªåº“ç”¨äºå°†Giteeè½¬æ¢ä¸ºå…è´¹çš„ç½‘ç»œç¡¬ç›˜ã€‚
 
-## ÈçºÎÆô¶¯²âÊÔ
-ÔÚGiteeFSTestÄ¿Â¼ÏÂĞÂ½¨ÎÄ¼şLoginInfo.txt£¬Ç°ËÄĞĞ·Ö±ğÎªÒÔÏÂÄÚÈİ£º
-ÄãµÄGiteeÓÃ»§Ãû
-ÄãµÄGiteeÃÜÂë
-ÄãÔÚGiteeÉÏÉêÇëµÄÓ¦ÓÃClientId
-ÄãÔÚGiteeÉÏÉêÇëµÄÓ¦ÓÃClientSecret
+## å¦‚ä½•å¯åŠ¨æµ‹è¯•
+åœ¨GiteeFSTestç›®å½•ä¸‹æ–°å»ºæ–‡ä»¶LoginInfo.txtï¼Œå‰å››è¡Œåˆ†åˆ«ä¸ºä»¥ä¸‹å†…å®¹ï¼š
+ä½ çš„Giteeç”¨æˆ·å
+ä½ çš„Giteeå¯†ç 
+ä½ åœ¨Giteeä¸Šç”³è¯·çš„åº”ç”¨ClientId
+ä½ åœ¨Giteeä¸Šç”³è¯·çš„åº”ç”¨ClientSecret
 
-Ö®ºó¼´¿ÉÆô¶¯²âÊÔ¡£
+ä¹‹åå³å¯å¯åŠ¨æµ‹è¯•ã€‚
