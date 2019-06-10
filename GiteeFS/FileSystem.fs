@@ -3,6 +3,7 @@
 open Utils
 open Authentication
 open FSharp.Data
+open System
 
 type BlobInfo = {
     size : uint64
@@ -87,5 +88,66 @@ let downloadString accessToken item =
 
     
 /// 新建文件
+let createFile accessToken repo path content msg =
+    try
+        let query =
+            [
+                "access_token",Authentication.tokenString accessToken
+                "content",Convert.ToBase64String content
+                "message",msg]
+        let url =
+            sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
+                repo.owner
+                repo.repo
+                path
+        let response = Http.Request (url,query,[],"POST")
+        if response.StatusCode <> 200 then
+            raise (HttpFailed response.StatusCode)
+        Ok ()
+
+    with ex ->
+        Error ex
+
+
 /// 更新文件
+let updateFile accessToken fileItem content msg =
+    try
+        let query =
+            [
+                "access_token",Authentication.tokenString accessToken
+                "content",Convert.ToBase64String content
+                "sha",fileItem.sha
+                "message",msg]
+        let url =
+            sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
+                fileItem.source.owner
+                fileItem.source.repo
+                fileItem.path
+        let response = Http.Request (url,query,[],"PUT")
+        if response.StatusCode <> 200 then
+            raise (HttpFailed response.StatusCode)
+        Ok ()
+
+    with ex ->
+        Error ex
+
 /// 删除文件
+let deleteFile accessToken fileItem msg =
+    try
+        let query =
+            [
+                "access_token",Authentication.tokenString accessToken
+                "sha",fileItem.sha
+                "message",msg]
+        let url =
+            sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
+                fileItem.source.owner
+                fileItem.source.repo
+                fileItem.path
+        let response = Http.Request (url,query,[],"DELETE")
+        if response.StatusCode <> 200 then
+            raise (HttpFailed response.StatusCode)
+        Ok ()
+
+    with ex ->
+        Error ex

@@ -12,6 +12,9 @@ type Repo = {
 /// 预料外的JSON响应
 exception InvalidJsonResponse of FSharp.Data.JsonValue
 
+/// http访问失败
+exception HttpFailed of int
+
 /// 渲染Markdown
 let renderMarkdown text =
     try
