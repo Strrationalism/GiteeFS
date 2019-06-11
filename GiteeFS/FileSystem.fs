@@ -208,3 +208,33 @@ let getDirectoryContentByPath accessToken repo path =
         |> Ok
     with exn ->
         Error exn
+
+/// 下载目录内容到本地目录
+let rec downloadDirectory accessToken logCallback repo path (downloadTo:string) : Result<unit,exn> =
+    let target = downloadTo.Trim('/').Trim('\\')
+    getDirectoryContentByPath accessToken repo path
+    |> Result.bind (
+        Array.Parallel.map (fun x ->
+            let name = 
+                match x.path.LastIndexOf '/' with
+                | -1 -> x.path
+                | pos -> x.path.[pos+1 ..]
+
+            lock logCallback (fun () -> logCallback x)
+
+            match x.itemType with
+            | Directory ->
+                IO.Directory.CreateDirectory (target+"/"+name)
+                |> ignore
+                downloadDirectory accessToken logCallback repo (path+"/"+name) (target+"/"+name) 
+            | File ->
+                download accessToken x
+                |> Result.map (fun x -> 
+                    IO.File.WriteAllBytes (target+"/"+name,x)))
+        >> Array.filter (function
+        | Ok _ -> false
+        | Error _ -> true)
+        >> function
+        | [||] -> Ok()
+        | errors -> Array.head errors)
+

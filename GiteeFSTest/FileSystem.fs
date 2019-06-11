@@ -98,4 +98,30 @@ type FileSystem () =
         printfn "=== Has Access Token ==="
         test (Authentication.accessToken.Force() |> Some) "src"
 
+    [<TestMethod>]
+    member this.downloadDirectory () =
+        let downloadLogger (logItem:GiteeFS.FileSystem.Item) =
+            printfn "Downloading %s" logItem.path
 
+        IO.Directory.CreateDirectory "Clone1" |> ignore
+        IO.Directory.CreateDirectory "Clone2" |> ignore
+
+        GiteeFS.FileSystem.downloadDirectory 
+            None
+            downloadLogger
+            exampleRepo
+            ""
+            "Clone1"
+        |> function
+        | Ok () -> ()
+        | Error x -> raise x
+
+        GiteeFS.FileSystem.downloadDirectory 
+            (Authentication.accessToken.Force() |> Some)
+            downloadLogger
+            exampleRepo
+            ""
+            "Clone2"
+        |> function
+        | Ok () -> ()
+        | Error x -> raise x
