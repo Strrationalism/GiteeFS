@@ -16,37 +16,6 @@ and Item = {
     source : Repo
 }
 
-/// 获取仓库目录树
-let getIndex accessToken repo =
-    try
-        let resultJson =
-            let options =
-                match accessToken with
-                | Some x -> sprintf "&access_token=%s" (tokenString x)
-                | None -> ""
-            sprintf "https://gitee.com/api/v5/repos/%s/%s/git/gitee/trees/master?recursive=1%s"
-                repo.owner
-                repo.repo
-                options
-            |> JsonValue.Load
-
-        JsonExtensions.Item (resultJson,"tree")
-        |> JsonExtensions.AsArray
-        |> Array.map (fun json ->
-            {
-                path = json.GetProperty "path" |> JsonExtensions.AsString
-                sha = json.GetProperty "sha" |> JsonExtensions.AsString
-                itemType =
-                    match json.GetProperty "type" |> JsonExtensions.AsString with
-                    | "tree" -> Directory
-                    | "blob" -> File
-                    | _ -> raise (InvalidJsonResponse json)
-                source = repo
-            })
-        |> Ok
-    with ex ->
-        Error ex
-
 /// 下载二进制数据
 let download accessToken item =
     try
@@ -182,3 +151,38 @@ let getFileByPath accessToken repo path =
         Ok (item,data)
     with ex ->
         Error ex
+
+/// 根据路径获取目录内容
+let getDirectoryContentByPath accessToken repo path =
+    try
+        let query =
+            match accessToken with
+            | Some token ->
+                ["access_token",tokenString token]
+            | None -> []
+        let url =
+            sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
+                repo.owner
+                repo.repo
+                path
+
+        let response =
+            Http.RequestString (url,query,[],"GET")
+            |> JsonValue.Parse
+
+        response
+        |> JsonExtensions.AsArray
+        |> Array.map (fun json ->
+            {
+                path = json.GetProperty "path" |> JsonExtensions.AsString
+                sha = json.GetProperty "sha" |> JsonExtensions.AsString
+                itemType = 
+                    match json.GetProperty "type" |> JsonExtensions.AsString with
+                    | "file" -> File
+                    | "dir" -> Directory
+                    | _ -> raise (InvalidJsonResponse response)
+                source = repo
+            })
+        |> Ok
+    with exn ->
+        Error exn

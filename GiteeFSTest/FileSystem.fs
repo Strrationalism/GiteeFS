@@ -9,29 +9,13 @@ type FileSystem () =
     let exampleRepo = { owner="cnwhy";repo="BitMatrix" }
 
     [<TestMethod>]
-    member this.getIndex () =
-        let test accessToken =
-            exampleRepo
-            |> GiteeFS.FileSystem.getIndex accessToken 
-            |> function
-            | Ok x -> 
-                x
-                |> Array.iter (fun x -> printfn "%s" x.path)
-            | Error ex -> raise ex
-        printfn "=== No Access Token ==="
-        test None
-        printfn "=== Has Access Token ==="
-        test (Authentication.accessToken.Force() |> Some)
-
-    [<TestMethod>]
     member this.download () =
         let test acc =
-            exampleRepo
-            |> GiteeFS.FileSystem.getIndex acc
+            
+            GiteeFS.FileSystem.getFileByPath acc exampleRepo "README.md"
             |> function 
-            | Ok x -> x
+            | Ok (x,_) -> x
             | Error x -> raise x
-            |> Array.find (fun x -> x.path = "README.md")
             |> GiteeFS.FileSystem.download acc
             |> function
             | Ok x -> x
@@ -56,3 +40,17 @@ type FileSystem () =
         test None "README.md"
         printfn "=== Has Access Token ==="
         test (Authentication.accessToken.Force() |> Some) "README.md"
+
+    [<TestMethod>]
+    member this.getDirectoryContentByPath () =
+        let test acc path =
+            GiteeFS.FileSystem.getDirectoryContentByPath acc exampleRepo path
+            |> function
+            | Ok items ->
+                items
+                |> Array.iter (fun x -> printfn "%s\t%A\t%s" x.path x.itemType x.sha)
+            | Error e -> raise e
+        printfn "=== No Access Token ===" 
+        test None ""
+        printfn "=== Has Access Token ==="
+        test (Authentication.accessToken.Force() |> Some) "src"
