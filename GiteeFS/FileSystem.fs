@@ -5,13 +5,9 @@ open Authentication
 open FSharp.Data
 open System
 
-type BlobInfo = {
-    size : uint64
-}
-
-and ItemType =
-| Tree
-| Blob of BlobInfo
+type ItemType =
+| Directory
+| File
 
 and Item = {
     path : string
@@ -42,10 +38,8 @@ let getIndex accessToken repo =
                 sha = json.GetProperty "sha" |> JsonExtensions.AsString
                 itemType =
                     match json.GetProperty "type" |> JsonExtensions.AsString with
-                    | "tree" -> Tree
-                    | "blob" -> 
-                        { size = json.GetProperty "size" |> JsonExtensions.AsInteger64 |> uint64 }
-                        |> Blob
+                    | "tree" -> Directory
+                    | "blob" -> File
                     | _ -> raise (InvalidJsonResponse json)
                 source = repo
             })
@@ -80,12 +74,6 @@ let download accessToken item =
 
     with ex ->
         Error ex
-
-/// 下载字符串
-let downloadString accessToken item =
-    download accessToken item
-    |> Result.map (System.Text.Encoding.Default.GetString)
-
     
 /// 新建文件
 let createFile accessToken repo path content msg =
@@ -149,5 +137,48 @@ let deleteFile accessToken fileItem msg =
             raise (HttpFailed response.StatusCode)
         Ok ()
 
+    with ex ->
+        Error ex
+
+/// 根据路径获取文件
+let getFileByPath accessToken repo path =
+    try
+        let query =
+            match accessToken with
+            | Some token ->
+                ["access_token",tokenString token]
+            | None -> []
+        let url = 
+            sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
+                repo.owner
+                repo.repo
+                path
+
+        let json =
+            Http.RequestString (url,query,[],"GET")
+            |> JsonValue.Parse
+
+        let itemType =
+            match json.GetProperty "type" |> JsonExtensions.AsString with
+            | "file" -> File
+            | _ -> raise (InvalidJsonResponse json)
+
+        let item = {
+            path = json.GetProperty "path" |> JsonExtensions.AsString
+            sha = json.GetProperty "sha" |> JsonExtensions.AsString
+            itemType = itemType
+            source = repo
+        }
+
+        let data =
+            match itemType with
+            | File _ ->
+                json.GetProperty "content"
+                |> JsonExtensions.AsString
+                |> Convert.FromBase64String
+            
+            | Directory ->
+                [||]
+        Ok (item,data)
     with ex ->
         Error ex
