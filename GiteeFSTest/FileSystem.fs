@@ -8,6 +8,49 @@ type FileSystem () =
 
     let exampleRepo = { owner="cnwhy";repo="BitMatrix" }
 
+    (*let writableRepo = { owner = "";repo = "" }
+    
+    [<TestMethod>]
+    member this.magicTest () =
+        let fileItem =
+            GiteeFS.FileSystem.createFile 
+                (Authentication.accessToken.Force())
+                writableRepo
+                "FunckyTest/Super.md"
+                (System.Text.Encoding.Default.GetBytes "# stupid")
+                "CreateFileTest"
+            |> function
+            | Ok x -> x
+            | Error e -> raise e
+
+        let updatedFileItem =
+            GiteeFS.FileSystem.updateFile 
+                (Authentication.accessToken.Force())
+                fileItem
+                (System.Text.Encoding.Default.GetBytes "## stupid")
+                "UpdateFileTest"
+            |> function
+            | Ok x -> x
+            | Error e -> raise e
+
+        GiteeFS.FileSystem.download 
+            (Authentication.accessToken.Force() |> Some) 
+            updatedFileItem
+        |> function
+        | Ok x -> x
+        | Error exn -> raise exn
+        |> System.Text.Encoding.Default.GetString
+        |> printfn "%s"
+
+
+        GiteeFS.FileSystem.deleteFile 
+            (Authentication.accessToken.Force())
+            updatedFileItem
+            "DeleteFileTest"
+        |> function
+        | Error exn -> raise exn
+        | Ok () -> ()*)
+
     [<TestMethod>]
     member this.download () =
         let test acc =
@@ -54,3 +97,5 @@ type FileSystem () =
         test None ""
         printfn "=== Has Access Token ==="
         test (Authentication.accessToken.Force() |> Some) "src"
+
+

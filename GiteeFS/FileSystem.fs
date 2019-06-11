@@ -16,7 +16,7 @@ and Item = {
     source : Repo
 }
 
-/// 下载二进制数据
+/// 下载文件
 let download accessToken item =
     try
         let options =
@@ -57,10 +57,21 @@ let createFile accessToken repo path content msg =
                 repo.owner
                 repo.repo
                 path
-        let response = Http.Request (url,query,[],"POST")
-        if response.StatusCode <> 200 then
-            raise (HttpFailed response.StatusCode)
-        Ok ()
+
+        let response = 
+            Http.RequestString (url,query,[],"POST")
+            |> JsonValue.Parse
+
+        let content = response.GetProperty "content"
+
+        {
+            path = content.GetProperty "path" |> JsonExtensions.AsString
+            sha = content.GetProperty "sha" |> JsonExtensions.AsString
+            itemType = File
+            source = repo
+        }
+        |> Ok
+        
 
     with ex ->
         Error ex
@@ -80,10 +91,21 @@ let updateFile accessToken fileItem content msg =
                 fileItem.source.owner
                 fileItem.source.repo
                 fileItem.path
-        let response = Http.Request (url,query,[],"PUT")
-        if response.StatusCode <> 200 then
-            raise (HttpFailed response.StatusCode)
-        Ok ()
+
+        let response = 
+            Http.RequestString (url,query,[],"PUT")
+            |> JsonValue.Parse
+
+        let content = response.GetProperty "content"
+
+        {
+            path = content.GetProperty "path" |> JsonExtensions.AsString
+            sha = content.GetProperty "sha" |> JsonExtensions.AsString
+            itemType = File
+            source = fileItem.source
+        }
+        |> Ok
+    
 
     with ex ->
         Error ex
