@@ -40,4 +40,5 @@ let login username password clientId clientSecret =
     with ex -> 
         Error ex
     
-
+/// 直接使用现有的access token
+let buildAccessToken token = { token = token }
