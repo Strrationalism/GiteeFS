@@ -1,4 +1,4 @@
-module GiteeFS.FileSystem
+﻿module GiteeFS.FileSystem
 
 open Utils
 open Authentication
@@ -51,7 +51,8 @@ let createFile accessToken repo path content msg =
             [
                 "access_token",Authentication.tokenString accessToken
                 "content",Convert.ToBase64String content
-                "message",msg]
+                "message",msg
+                ]
         let url =
             sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
                 repo.owner
@@ -60,7 +61,7 @@ let createFile accessToken repo path content msg =
             |> Uri.EscapeUriString
 
         let response = 
-            Http.RequestString (url,query,[],"POST")
+            Http.RequestString (url,query,["charset","UTF-8"],"POST")
             |> JsonValue.Parse
 
         let content = response.GetProperty "content"

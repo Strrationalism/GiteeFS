@@ -1,4 +1,4 @@
-module GiteeFS.Utils
+﻿module GiteeFS.Utils
 
 /// SHA
 type Sha = string

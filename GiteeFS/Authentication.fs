@@ -1,4 +1,4 @@
-module GiteeFS.Authentication
+﻿module GiteeFS.Authentication
 
 open FSharp.Data
 
