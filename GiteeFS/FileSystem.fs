@@ -91,6 +91,7 @@ let updateFile accessToken fileItem content msg =
                 fileItem.source.owner
                 fileItem.source.repo
                 fileItem.path
+            |> Uri.EscapeUriString
 
         let response = 
             Http.RequestString (url,query,[],"PUT")
