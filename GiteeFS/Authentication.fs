@@ -8,11 +8,11 @@ type AccessToken = private {
 
 exception InvalidGrant of JsonValue
 
-/// »ñÈ¡access token×Ö·û´®
+/// è·å–access tokenå­—ç¬¦ä¸²
 let tokenString token =
     token.token
 
-/// µÇÂ½²¢»ñÈ¡access token
+/// ç™»é™†å¹¶è·å–access token
 let login username password clientId clientSecret = 
     try
         let query = [
@@ -40,5 +40,5 @@ let login username password clientId clientSecret =
     with ex -> 
         Error ex
     
-/// Ö±½ÓÊ¹ÓÃÏÖÓĞµÄaccess token
+/// ç›´æ¥ä½¿ç”¨ç°æœ‰çš„access token
 let buildAccessToken token = { token = token }

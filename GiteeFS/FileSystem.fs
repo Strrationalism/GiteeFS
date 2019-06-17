@@ -1,4 +1,4 @@
-﻿module GiteeFS.FileSystem
+module GiteeFS.FileSystem
 
 open Utils
 open Authentication
@@ -57,6 +57,7 @@ let createFile accessToken repo path content msg =
                 repo.owner
                 repo.repo
                 path
+            |> Uri.EscapeUriString
 
         let response = 
             Http.RequestString (url,query,[],"POST")
@@ -124,6 +125,7 @@ let deleteFile accessToken fileItem msg =
                 fileItem.source.owner
                 fileItem.source.repo
                 fileItem.path
+            |> Uri.EscapeUriString
         let response = Http.Request (url,query,[],"DELETE")
         if response.StatusCode <> 200 then
             raise (HttpFailed response.StatusCode)
@@ -145,6 +147,7 @@ let getFileByPath accessToken repo path =
                 repo.owner
                 repo.repo
                 path
+            |> Uri.EscapeUriString
 
         let json =
             Http.RequestString (url,query,[],"GET")
@@ -188,6 +191,7 @@ let getDirectoryContentByPath accessToken repo path =
                 repo.owner
                 repo.repo
                 path
+            |> Uri.EscapeUriString
 
         let response =
             Http.RequestString (url,query,[],"GET")
