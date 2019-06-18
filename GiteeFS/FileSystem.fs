@@ -4,6 +4,7 @@ open Utils
 open Authentication
 open FSharp.Data
 open System
+open System.Net.Http
 
 type ItemType =
 | Directory
@@ -82,12 +83,17 @@ let createFile accessToken repo path content msg =
 /// 更新文件
 let updateFile accessToken fileItem content msg =
     try
-        let query =
-            [
-                "access_token",Authentication.tokenString accessToken
-                "content",Convert.ToBase64String content
-                "sha",fileItem.sha
-                "message",msg]
+        use http = new HttpClient ()
+        use query =
+            new FormUrlEncodedContent(
+                [
+                    "access_token",Authentication.tokenString accessToken
+                    "content",Convert.ToBase64String content
+                    "sha",fileItem.sha
+                    "message",msg]
+                |> dict)
+             
+
         let url =
             sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
                 fileItem.source.owner
@@ -96,7 +102,7 @@ let updateFile accessToken fileItem content msg =
             |> Uri.EscapeUriString
 
         let response = 
-            Http.RequestString (url,query,[],"PUT")
+            http.PutAsync(url,query).Result.Content.ReadAsStringAsync().Result
             |> JsonValue.Parse
 
         let content = response.GetProperty "content"
