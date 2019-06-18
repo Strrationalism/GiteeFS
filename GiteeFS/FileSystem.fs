@@ -99,7 +99,6 @@ let updateFile accessToken fileItem content msg =
                 fileItem.source.owner
                 fileItem.source.repo
                 fileItem.path
-            |> Uri.EscapeUriString
 
         let response = 
             http.PutAsync(url,query).Result.Content.ReadAsStringAsync().Result
@@ -144,20 +143,24 @@ let deleteFile accessToken fileItem msg =
 /// 根据路径获取文件
 let getFileByPath accessToken repo path =
     try
-        let query =
-            match accessToken with
-            | Some token ->
-                ["access_token",tokenString token]
-            | None -> []
+        use http = new HttpClient ()
+
         let url = 
-            sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
-                repo.owner
-                repo.repo
-                path
-            |> Uri.EscapeUriString
+            match accessToken with
+            | Some t ->
+                sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s?accessToken=%s"
+                    repo.owner
+                    repo.repo
+                    path
+                    (tokenString t)
+            | None ->
+                sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
+                    repo.owner
+                    repo.repo
+                    path
 
         let json =
-            Http.RequestString (url,query,[],"GET")
+            http.GetStringAsync(url).Result
             |> JsonValue.Parse
 
         let itemType =
@@ -188,20 +191,24 @@ let getFileByPath accessToken repo path =
 /// 根据路径获取目录内容
 let getDirectoryContentByPath accessToken repo path =
     try
-        let query =
+        use http = new HttpClient ()
+
+        let url = 
             match accessToken with
-            | Some token ->
-                ["access_token",tokenString token]
-            | None -> []
-        let url =
-            sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
-                repo.owner
-                repo.repo
-                path
-            |> Uri.EscapeUriString
+            | Some t ->
+                sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s?accessToken=%s"
+                    repo.owner
+                    repo.repo
+                    path
+                    (tokenString t)
+            | None ->
+                sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
+                    repo.owner
+                    repo.repo
+                    path
 
         let response =
-            Http.RequestString (url,query,[],"GET")
+            http.GetStringAsync(url).Result
             |> JsonValue.Parse
 
         response
