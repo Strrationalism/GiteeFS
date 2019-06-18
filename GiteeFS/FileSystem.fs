@@ -48,21 +48,22 @@ let download accessToken item =
 /// 新建文件
 let createFile accessToken repo path content msg =
     try
+        use http = new HttpClient ()
         let query =
             [
                 "access_token",Authentication.tokenString accessToken
                 "content",Convert.ToBase64String content
                 "message",msg
-                ]
+                ] |> dict
+        use queryContent = new FormUrlEncodedContent(query)
         let url =
             sprintf "https://gitee.com/api/v5/repos/%s/%s/contents/%s"
                 repo.owner
                 repo.repo
                 path
-            |> Uri.EscapeUriString
 
         let response = 
-            Http.RequestString (url,query,["charset","UTF-8"],"POST")
+            http.PostAsync(url,queryContent).Result.Content.ReadAsStringAsync().Result
             |> JsonValue.Parse
 
         let content = response.GetProperty "content"
