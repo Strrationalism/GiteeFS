@@ -18,7 +18,9 @@ exception HttpFailed of int
 /// 渲染Markdown
 let renderMarkdown text =
     try
-        FSharp.Data.Http.RequestString ("https://gitee.com/api/v5/markdown",["text",text],[],"POST")
+        use http = new System.Net.Http.HttpClient ()
+        http.PostAsync("https://gitee.com/api/v5/markdown",new System.Net.Http.FormUrlEncodedContent(dict ["text",text]))
+            .Result.Content.ReadAsStringAsync().Result
         |> Ok
     with ex ->
         Error ex
