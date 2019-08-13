@@ -1,6 +1,5 @@
 # GiteeFS
 [![Build status](https://ci.appveyor.com/api/projects/status/u1jfsibjfcubew6f?svg=true)](https://ci.appveyor.com/project/SmallLuma/giteefs)
-[![Build status](https://dev.azure.com/StrrationalismTeam/OpenSource%20Pipes/_apis/build/status/GiteeFS-CI)](https://dev.azure.com/StrrationalismTeam/OpenSource%20Pipes/_build/latest?definitionId=4)
 
 这个库用于将Gitee转换为免费的网络硬盘。
 
