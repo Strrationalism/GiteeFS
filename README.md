@@ -1,5 +1,5 @@
 # GiteeFS
-[![Build status](https://ci.appveyor.com/api/projects/status/u1jfsibjfcubew6f?svg=true)](https://ci.appveyor.com/project/SmallLuma/giteefs)
+本项目已终止维护，建议切换至[GiteeDriver](https://github.com/Strrationalism/GiteeDrive)。
 
 这个库用于将Gitee转换为免费的网络硬盘。
 
